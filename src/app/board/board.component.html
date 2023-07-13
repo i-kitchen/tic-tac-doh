@@ -1,9 +1,12 @@
-<h1>Current Player: {{ player }} </h1>
+<h1>Current Player: {{ playerNormalized }} </h1>
 
 <button mat-button (click)="newGame()">Start new Game</button>
 
 <h2 *ngIf="winner">
-  Player {{ winner }} won the game!
+  <span *ngIf="winner == 'X'; else aiwon">You won the game!</span>
+  <ng-template #aiwon>
+    The AI won the game, somehow...
+  </ng-template>
 </h2>
 
 

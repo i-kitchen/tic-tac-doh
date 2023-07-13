@@ -32,18 +32,30 @@ export class BoardComponent implements OnInit {
     return this.xIsNext ? 'X' : 'O';
   }
 
+  get playerNormalized() {
+    return this.xIsNext ? 'You' : 'AI';
+  }
+
   /**
    * Sets game state based on the move that was made
    * 
-   * @param {Number} idx 
+   * @param {Number} square 
    */
-  makeMove(idx: number) {
-    if (!this.squares[idx]) {
-      this.squares.splice(idx, 1, this.player);
+  makeMove(square: number) {
+    if (!this.squares[square]) {
+      this.squares.splice(square, 1, this.player);
       this.xIsNext = !this.xIsNext;
     }
 
     this.winner = this.determineWinner();
+
+    // Have AI take a move if they are up
+    if (!this.winner && this.xIsNext === false) {
+      // Calling this AI feels dirty, it just picks a random square from any available square
+      let availableMoves = this.emptyCells();
+      let aiMove = availableMoves[Math.floor(Math.random()*availableMoves.length)];
+      this.makeMove(aiMove);
+    }
   }
 
   /**
@@ -78,5 +90,21 @@ export class BoardComponent implements OnInit {
       }
     }
     return null;
+  }
+
+  /**
+   * Determines the squares left empty for the "AI" to take
+   *
+   * @returns {Array}
+   */
+  emptyCells() {
+    let emptyCells = [];
+    for (let i = 0; i < this.squares.length; i++) {
+      if (!this.squares[i]) {
+        emptyCells.push(i);
+      }
+    }
+
+    return emptyCells;
   }
 }
