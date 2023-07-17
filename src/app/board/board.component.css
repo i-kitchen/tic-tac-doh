@@ -3,3 +3,8 @@ app-square {
     height: 400px;
     width: 100%;
 }
+
+.result-text {
+    display: block;
+    height: 50px;
+}

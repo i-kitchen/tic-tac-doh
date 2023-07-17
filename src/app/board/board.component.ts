@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { WINNING_COMBOS } from '../app-constants';
 
 @Component({
   selector: 'app-board',
@@ -32,8 +33,35 @@ export class BoardComponent implements OnInit {
     return this.xIsNext ? 'X' : 'O';
   }
 
+  /**
+   * Converts 'X' to 'You' as the player, and 'AI' as the computer for
+   * conveying game state messages
+   */
   get playerNormalized() {
     return this.xIsNext ? 'You' : 'AI';
+  }
+
+  /**
+   * Determines if the game is tied or not
+   */
+  get isTied() {
+    return (!this.winner) && (this.emptyCells().length == 0);
+  }
+
+  /**
+   * Determines the text to be displayed after a game ending move
+   */
+  get gameEndText() {
+    let winText = 'Tie Game!';
+    if (this.winner && !this.isTied) {
+      if (this.winner == 'X') {
+        winText = 'You Won the Game!';
+      } else {
+        winText = 'The AI won the game, somehow...';
+      }
+    }
+
+    return winText;
   }
 
   /**
@@ -55,9 +83,9 @@ export class BoardComponent implements OnInit {
     this.winner = this.determineWinner();
 
     // Have AI take a move if they are up
-    if (!this.winner && this.xIsNext === false) {
+    let availableMoves = this.emptyCells();
+    if (!this.winner && this.xIsNext === false && availableMoves.length > 0) {
       // Calling this AI feels dirty, it just picks a random square from any available square
-      let availableMoves = this.emptyCells();
       let aiMove = availableMoves[Math.floor(Math.random()*availableMoves.length)];
       this.makeMove(aiMove);
     }
@@ -69,21 +97,9 @@ export class BoardComponent implements OnInit {
    * @returns {String|null}
    */
   determineWinner() {
-    // Create list of winning combinations
-    const winningCombos = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6]
-    ];
-
     // Loop through the winning combos list
-    for (let i = 0; i < winningCombos.length; i++) {
-      const [a, b, c] = winningCombos[i];
+    for (let i = 0; i < WINNING_COMBOS.length; i++) {
+      const [a, b, c] = WINNING_COMBOS[i];
 
       // IF there is an 'X' or an 'O' in each slot of a winning combo, there is a winner
       if (

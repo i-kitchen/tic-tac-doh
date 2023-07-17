@@ -4,3 +4,15 @@
     margin-right: auto;
     margin-top: 1em;
 }
+
+@media screen and (max-width: 1000px) {
+    .main-card {
+        width: 100%;
+    }
+}
+
+@media screen and (min-width: 2000px) {
+    .main-card {
+        width: 1000px;
+    }
+}

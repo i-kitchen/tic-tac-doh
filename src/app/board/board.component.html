@@ -2,12 +2,11 @@
 
 <button mat-button (click)="newGame()">Start new Game</button>
 
-<h2 *ngIf="winner">
-  <span *ngIf="winner == 'X'; else aiwon">You won the game!</span>
-  <ng-template #aiwon>
-    The AI won the game, somehow...
-  </ng-template>
-</h2>
+<div class="result-text">
+  <h2 *ngIf="winner || isTied">
+    {{ gameEndText }}
+  </h2>
+</div>
 
 
 <mat-grid-list cols="3" rowHeight="200px">
